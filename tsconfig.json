@@ -27,7 +27,7 @@
 			"dom"
 		],
 		"module": "es6",
-		"include": ["./src/declarations.d.ts"],
+		// "include": ["./src/declarations.d.ts"],
 		"removeComments": true,
 		"alwaysStrict": true,
 		"allowUnreachableCode": false,
