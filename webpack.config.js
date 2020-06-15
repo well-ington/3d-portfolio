@@ -9,7 +9,8 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/',
+    libraryTarget: "umd"
   },
 
   // adding .ts and .tsx to resolve.extensions will help babel look for .ts and .tsx files to transpile
@@ -44,7 +45,7 @@ module.exports = {
             loader: 'file-loader',
           },
         ],
-      }
+      },
     ]
   },
   plugins: [

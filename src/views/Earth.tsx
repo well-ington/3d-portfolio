@@ -1,45 +1,26 @@
 import React from 'react';
 import * as THREE from 'three';
+//without react fiber
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-//@ts-ignore
 import EarthTexture from '../textures/earth/2k_earth_daymap_ground.jpg';
-//@ts-ignore
 import EarthCloudTexture from '../textures/earth/2k_earth_clouds_ground.jpg';
-//@ts-ignore
 import MoonTexture from '../textures/earth/2k_moon_ground.jpg';
-//@ts-ignore
 import MarsTexture from '../textures/earth/2k_mars_ground.jpg';
-//@ts-ignore
 import SaturnTexture from '../textures/earth/2k_saturn_ground.jpg';
-//@ts-ignore
 import SaturnCloudsTexture from '../textures/earth/2k_saturn_clouds.jpg';
-//@ts-ignore
 import JupiterTexture from '../textures/earth/2k_jupiter_ground.jpg';
-//@ts-ignore
 import SaturnRingTexture from '../textures/earth/2k_saturn_ring_ground.jpg';
-//@ts-ignore
 import UranusTexture from '../textures/earth/2k_uranus_ground.jpg';
-//@ts-ignore
 import NeptuneTexture from '../textures/earth/2k_neptune_ground.jpg';
-//@ts-ignore
 import MercuryTexture from '../textures/earth/2k_mercury_ground.jpg';
-//@ts-ignore
-import VenusTexture from '../textures/earth/2k_venus_surface_ground.jpg';
-//@ts-ignore
+import VenusTexture from '../textures/earth/2k_venus_ground.jpg';
 import VenusAtmosphereTexture from '../textures/earth/2k_venus_atmosphere_ground.jpg';
-//@ts-ignore
 import SunTexture from '../textures/earth/2k_sun_ground.jpg';
-//@ts-ignore
 import PxTx from '../textures/earth/cube/px.jpg';
-//@ts-ignore
 import NxTx from '../textures/earth/cube/nx.jpg';
-//@ts-ignore
 import PzTx from '../textures/earth/cube/pz.jpg';
-//@ts-ignore
 import NzTx from '../textures/earth/cube/nz.jpg';
-//@ts-ignore
 import PyTx from '../textures/earth/cube/py.jpg';
-//@ts-ignore
 import NyTx from '../textures/earth/cube/ny.jpg';
 const distances = {
     mercury: 10359.65,
@@ -132,7 +113,7 @@ const Earth: React.FC = () => {
         cloudTexture.anisotropy = maxAnisontropy;
 
         const cloudMaterial = new THREE.MeshPhongMaterial({ 
-            alphaMap: cloudTexture, 
+            alphaMap: cloudTexture,
             alphaTest: 0,
             transparent: true,
             opacity: 0.9999 });
