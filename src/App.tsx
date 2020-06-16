@@ -9,9 +9,10 @@ import SolarSystem from './views/SolarSystem';
 // import SolarFiber from 'views/SolarFiber';
 
 const AppContainer = styled.div`
-
+    font-size: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     >.app__bar {
-        width: 100vw;
+        /* width: 100vw; */
         background-color: #333;
         display: flex;
         flex-direction: row;
@@ -20,13 +21,13 @@ const AppContainer = styled.div`
         >a.bar__element {
             text-decoration: none;
             text-transform: capitalize;
-            font-size: 1.2rem;
-            padding: 0.5rem;
+            font-size: 1.6em;
+            padding: 0.5em;
             /* background-color: red; */
-            color: white;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: white;            
             /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
             font-weight: 300;
+            
             transition: all 500ms;
             &:hover {
                 background-color: hsl(350, 70%, 30%);
@@ -35,8 +36,8 @@ const AppContainer = styled.div`
     }
 `;
 
-const routes = ['/home', '/planet_display', '/solar_system', '/market'];
-const routeComponents = [<Home/>, <PlanetDisplay/>, <SolarSystem />, <Market/>];
+const routes = ['/home', '/planet_display', '/market'];
+const routeComponents = [<Home/>, <PlanetDisplay/>, <Market/>];
 
 const App: React.FC = () => {
     return <AppContainer>

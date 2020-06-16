@@ -54,17 +54,7 @@ const Earth: React.FC = () => {
         initialPoint: [0,0]
     });
     React.useEffect(() => {
-        
-        // const distancesReal = {
-        //     mercury: 10359.65,
-        //     venus: 17062.79,
-        //     earth: 23485.08,
-        //     mars: 35777.08,
-        //     jupiter: 122213.5,
-        //     saturn: 225117.74,
-        //     uranus: 450706.44,
-        //     neptune: 705651.49
-        // };
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
             40,

@@ -21,7 +21,7 @@ import {
     MeshPhongMaterial,
     DoubleSide 
     } from 'three';
-import { useFrame } from 'react-three-fiber';
+import { useFrame, useThree } from 'react-three-fiber';
 
 interface IAstroMesh {
     position: number[];
@@ -41,15 +41,12 @@ const meshSize = {
 
 const planetSizes = Object.values(meshSize);
 const planetNames = Object.keys(meshSize);
-// const planetSizes = Object.values(meshSize);
 
 
 const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
     const mesh: any = React.useRef();
     const asset: any = React.useRef();
     const grouper: any = React.useRef();
-    // const textReference
-    // const assetTexture = React.useMemo(() => new TextureLoader().load(EarthCloudTexture), [EarthCloudTexture]);
     let assetTexture: any;
     const texture = React.useMemo(() => {
         let textureReference: any;
@@ -120,22 +117,22 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
                 const geo = new RingBufferGeometry(1.12, 2.37, 128);
                 const pos: any = geo.attributes.position;
                 let v3 = new Vector3();
+                
                 for (let i = 0; i < pos.count; i++) {
                     v3.fromBufferAttribute(pos, i);
-                    console.log(v3);
-                    geo.attributes.uv.setXY(i, v3.length() < (2.37 - 1.12) ? 0 : 1, 1);
+                    geo.attributes.uv.setXY(i, v3.length() < 1.5 ? 0 : 1, 1);
                 }
          
 
                 return <mesh 
-                castShadow
-                receiveShadow
                 rotation={[Math.PI / 2, 0, 0]} 
                 ref={asset} 
                 geometry={geo} 
+                receiveShadow
+                // castShadow
                 >
 
-                    <meshPhongMaterial attach='material' alphaMap={assetTexture} transparent side={DoubleSide} shininess={120000} />
+                    <meshPhongMaterial attach='material' alphaMap={assetTexture} transparent alphaTest={0} side={DoubleSide} emissive={'#fff2bd'} emissiveIntensity={0.2}/>
                 </mesh>;
             default:
                 return <></>;
@@ -180,8 +177,8 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
             receiveShadow
         >
             <sphereBufferGeometry attach='geometry' args={[ 1, 64, 64]} />
-            <meshPhongMaterial attach='material' map={texture} onUpdate={self => texture && (self.needsUpdate = true)}>
-            </meshPhongMaterial>
+            <meshLambertMaterial attach='material'  map={texture} onUpdate={self => texture && (self.needsUpdate = true)}>
+            </meshLambertMaterial>
         </mesh>
         {
             assets
