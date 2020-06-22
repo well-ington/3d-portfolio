@@ -6,11 +6,13 @@ import PlanetDisplay from './views/PlanetDisplay';
 import Market from './views/Market';
 import { Link } from 'react-router-dom';
 import SolarSystem from './views/SolarSystem';
+import MeshLabs from './views/MeshLabs';
 // import SolarFiber from 'views/SolarFiber';
 
 const AppContainer = styled.div`
     font-size: 10px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /* margin: 0; */
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
     >.app__bar {
         /* width: 100vw; */
         background-color: #333;
@@ -36,16 +38,16 @@ const AppContainer = styled.div`
     }
 `;
 
-const routes = ['/home', '/planet_display', '/market'];
-const routeComponents = [<Home/>, <PlanetDisplay/>, <Market/>];
+const routes = ['/home', '/planet_display', '/meshlabs', '/market'];
+const routeComponents = [<Home/>, <PlanetDisplay/>, <MeshLabs/>, <Market/>];
 
 const App: React.FC = () => {
     return <AppContainer>
-        <div className='app__bar'>
+        {/* <div className='app__bar'>
         {
             routes.map((e: string) => <Link className='bar__element' key={e} to={e}>{(e.substring(1, e.length)).replace(/_/, ' ')}</Link>)
         }
-        </div>
+        </div> */}
        
         <Switch>
             {

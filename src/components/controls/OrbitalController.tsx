@@ -1,40 +1,37 @@
 import React from 'react';
 import {extend, useThree} from 'react-three-fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import {PerspectiveCamera, CubeTextureLoader} from 'three';
-import PxTx from '../../textures/earth/cube/px.jpg';
-import NxTx from '../../textures/earth/cube/nx.jpg';
-import PzTx from '../../textures/earth/cube/pz.jpg';
-import NzTx from '../../textures/earth/cube/nz.jpg';
-import PyTx from '../../textures/earth/cube/py.jpg';
-import NyTx from '../../textures/earth/cube/ny.jpg';
+import {PerspectiveCamera} from 'three';
 
 
-const CameraController: () => null = () => {
+
+const CameraController: React.FC<{pos?: number}> = () => {
     React.useMemo(() => extend({OrbitControls}), [OrbitControls]);
-    const { camera, gl, scene } = useThree();
-    const cubeTexture = React.useMemo(() => new CubeTextureLoader().load([
-      PxTx, NxTx, PyTx, NyTx, PzTx, NzTx
-  ]),
-  [ PxTx, NxTx, PyTx, NyTx, PzTx, NzTx, CubeTextureLoader]);
+    const { camera, gl } = useThree();
+
     React.useEffect(
       () => {
-        camera.type = "PerspectiveCamera";
+        // camera.type = "PerspectiveCamera";
         //@ts-ignore
-        camera.fov = 40;
-        scene.background = cubeTexture;
+        // camera.fov = 40;
+        // scene.background = cubeTexture;
+        // camera.quaternion.slerp(camera.quaternion, );
         //@ts-ignore
-        const controls = new OrbitControls(camera, gl.domElement);
+        // const controls = new OrbitControls(camera, gl.domElement);
+        // camera.position.z = 2.5;
+        // controls.minDistance = 0;
+        // controls.maxDistance = 10000;
+        // controls.enableKeys = false;
+        // controls.enablePan = false;
+        // controls.enableZoom = false;
+        // controls.enablePan = false;
         
-        controls.minDistance = 0;
-        controls.maxDistance = 10000;
-        controls.enableKeys = false;
-        controls.enablePan = false;
-        camera.position.z = 2.5;
+        // if (camera.position.)
+        
         
 
         return () => {
-          controls.dispose();
+          // controls.dispose();
         };
       },
       [camera, gl]

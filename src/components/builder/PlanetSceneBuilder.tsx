@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+import MovingPointCamera from '../controls/MovingPointCamera';
+
 import MercuryTexture from '../../textures/earth/2k_mercury_ground.jpg';
 import VenusTexture from '../../textures/earth/2k_venus_ground.jpg';
 import VenusAtmosphereTexture from '../../textures/earth/2k_venus_atmosphere_ground.jpg';
@@ -19,13 +21,16 @@ import {
     RingBufferGeometry, 
     Vector3, 
     MeshPhongMaterial,
-    DoubleSide 
+    DoubleSide, 
+    CylinderBufferGeometry
     } from 'three';
 import { useFrame, useThree } from 'react-three-fiber';
 
 interface IAstroMesh {
-    position: number[];
+    player?: any;
+    position?: number[];
     type: string;
+    satellite?: boolean;
 }
 
 const meshSize = {
@@ -43,10 +48,13 @@ const planetSizes = Object.values(meshSize);
 const planetNames = Object.keys(meshSize);
 
 
-const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
+const PlanetBuilder: React.FC<IAstroMesh> = ({ type, position, satellite, player }) => {
+    const {camera} = useThree();
     const mesh: any = React.useRef();
     const asset: any = React.useRef();
     const grouper: any = React.useRef();
+    const sat: any = satellite ? React.useRef() : null;
+    const [loaded, doLoad] = React.useState(false);
     let assetTexture: any;
     const texture = React.useMemo(() => {
         let textureReference: any;
@@ -102,14 +110,14 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
     const assets = React.useMemo(() => {
         switch (type) {
             case 'venus':
-                return <mesh {...position} ref={asset}>
+                return <mesh ref={asset}>
                     <sphereBufferGeometry attach='geometry' args={[1.03, 64, 64]} />
                     <meshPhongMaterial transparent attach='material' alphaMap={assetTexture} onUpdate={self => assetTexture && (self.needsUpdate = true)}>
                     </meshPhongMaterial>
                 </mesh>;
             case 'earth':
-                return <mesh {...position} ref={asset}>
-                    <sphereBufferGeometry attach='geometry' args={[1.03, 64, 64]} />
+                return <mesh ref={asset}>
+                    <sphereBufferGeometry attach='geometry' args={[1.01, 64, 64]} />
                     <meshPhongMaterial transparent attach='material' alphaMap={assetTexture} onUpdate={self => assetTexture && (self.needsUpdate = true)}>
                     </meshPhongMaterial>
                 </mesh>;
@@ -132,15 +140,47 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
                 // castShadow
                 >
 
-                    <meshPhongMaterial attach='material' alphaMap={assetTexture} transparent alphaTest={0} side={DoubleSide} emissive={'#fff2bd'} emissiveIntensity={0.2}/>
+                    <meshPhongMaterial attach='material' alphaMap={assetTexture} transparent alphaTest={0} side={DoubleSide} emissive={0xfff2bd} emissiveIntensity={0.2}/>
                 </mesh>;
             default:
                 return <></>;
         }
     }, [type]);
 
-
+    const satAsset = satellite ? React.useMemo(() => {
+        switch (type) {
+            case 'earth':
+                // const satGeometry = new CylinderBufferGeometry(0.05, 0.05, 0.2, 16, 16, true);
+                // satGeometry.openEnded = true;
+                // satGeometry.
+                // const satMaterial = new MeshPhongMaterial({color: 'limegreen'});
+                // satMaterial.side = DoubleSide;
+                // satMaterial.openEnded = true;
+                // const 
+                return <group ref={sat}>
+                    {/* <mesh>
+                        <sphereGeometry args={[0.05, 64, 64]} attach="geometry" />
+                        <meshPhongMaterial color={'green'} attach="material" />
+                    </mesh> */}
+                    <mesh>
+                        <cylinderBufferGeometry args={[0.05, 0.05, 0.2, 16, 16, true]} attach="geometry"/>
+                        <meshPhongMaterial color={'limegreen'} side={DoubleSide} attach="material" />
+                    </mesh>
+                </group>
+            case 'mars':
+                return <group ref={sat}>
+                <mesh>
+                    <sphereGeometry args={[0.05, 64, 64]} attach="geometry" />
+                    <meshPhongMaterial color={'green'} attach="material" />
+                </mesh>
+            </group>
+            default:
+                return null;
+        }
+    }, [type, sat]) : null;
+    
     useFrame(() => {
+        if(!loaded) grouper.current.position.set(...position);
         switch (type) {
             case 'venus':
                 mesh.current.rotation.y -= 0.001;
@@ -148,10 +188,30 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
                 break;
             case 'earth':
                 mesh.current.rotation.y += 0.001;
-                asset.current.rotation.y += 0.0009;
+                asset.current.rotation.y += 0.00075;                
+                if (satellite) {
+                    sat.current.position.z = Math.sin(mesh.current.rotation.y * 5) * 0.15;
+                    sat.current.position.y = Math.cos(mesh.current.rotation.y * 5) * 1.15;
+                    sat.current.position.x = Math.sin(mesh.current.rotation.y * 5) * 1.15;
+                    if(sat.current.rotation.z > -1) sat.current.rotation.z -= Math.PI/2;
+                    sat.current.rotation.z -= 0.005;
+                    // camera.lookAt(new Vector3(sat.current.position.x + player.target[0], sat.current.position.y + player.target[1], sat.current.position.z + player.target[2]));
+                    // // camera.rotation.x += 0.01;
+                    
+                    // camera.position.set((sat.current.position.x * 1.15) + player.coordinates[0], (sat.current.position.y * 1.15), (sat.current.position.z * 1.15) + player.coordinates[2]);
+                }
                 break;
             case 'mars':
-                mesh.current.rotation.y += 0.001;
+                mesh.current.rotation.y += 0.0001;
+                if (satellite) {
+                    sat.current.position.z = Math.sin(mesh.current.rotation.y * 10) * 0.15;
+                    sat.current.position.y = Math.cos(mesh.current.rotation.y * 20) * 1.15;
+                    sat.current.position.x = Math.sin(mesh.current.rotation.y * 20) * 1.15;
+                    // camera.lookAt(new Vector3(sat.current.position.x + player.target[0], sat.current.position.y + player.target[1], sat.current.position.z + player.target[2]));
+                    // // camera.rotation.x += 0.01;
+                    
+                    // camera.position.set((sat.current.position.x * 1.15) + player.coordinates[0], (sat.current.position.y * 1.15), (sat.current.position.z * 1.15) + player.coordinates[2]);
+                }
                 break;
             case 'jupiter':
                 mesh.current.rotation.y += 0.001;
@@ -159,7 +219,7 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
                 grouper.current.rotation.z = 0;
                 break;
             case 'saturn':
-                mesh.current.rotation.y += 0.1;
+                mesh.current.rotation.y += 0.001;
                 grouper.current.rotation.x = 0.07;
                 grouper.current.rotation.z = 0.23;
                 asset.current.rotation.z = 0.1;
@@ -168,9 +228,14 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
                 mesh.current.rotation.y += 0.001;
                 break;
         }
+        if(!loaded) doLoad(true);
+
+        if(satellite) {
+            MovingPointCamera(camera, sat.current.position, player)
+        }
     });
 
-    return <group {...position} ref={grouper}>
+    return <group ref={grouper}>
         <mesh
             ref={mesh}
             castShadow
@@ -183,7 +248,11 @@ const AstroMesh: React.FC<IAstroMesh> = ({ type, position }) => {
         {
             assets
         }
+
+        {
+            satellite && satAsset
+        }
     </group>
 }
 
-export default AstroMesh;
+export default PlanetBuilder;
